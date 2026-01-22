@@ -1,0 +1,14 @@
+{
+  "name": "kuky-vps-api",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "fastify": "^4.26.0",
+    "bullmq": "^5.4.0",
+    "ioredis": "^5.3.2"
+  }
+}
