@@ -1,0 +1,16 @@
+# Configuração Manual do Nixpacks para Kuky API
+
+[phases.setup]
+# Aqui forçamos APENAS o que funciona, sem inventar npm-9_x
+nixPkgs = ["nodejs_18", "python3", "python3-pip", "ffmpeg"]
+
+[phases.install]
+# Instala dependências do Node e o yt-dlp do Python
+cmds = [
+    "npm install",
+    "pip install --upgrade 'yt-dlp[default,curl_cffi]' --break-system-packages"
+]
+
+[start]
+# Comando para iniciar o servidor
+cmd = "npm run start"
