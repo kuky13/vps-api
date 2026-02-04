@@ -1,17 +1,19 @@
-# Configuração Manual do Nixpacks para Kuky API
+# Configuração Manual do Nixpacks para Kuky API (Modo VENV)
 
 [phases.setup]
-# Mantemos os pacotes básicos (o Python vem sem o pip, e isso é normal no Nix)
-nixPkgs = ["nodejs_18", "python3", "ffmpeg"]
+# Mantemos apenas o necessário. O GCC é adicionado para garantir compilação se necessário.
+nixPkgs = ["nodejs_18", "python3", "ffmpeg", "gcc"]
 
 [phases.install]
 cmds = [
     "npm install",
-    # O COMANDO MÁGICO: Isso cria o pip dentro do Python
-    "python3 -m ensurepip --default-pip",
-    # Agora o pip existe e podemos usá-lo
-    "python3 -m pip install --upgrade 'yt-dlp[default,curl_cffi]' --break-system-packages"
+    # 1. Cria um ambiente virtual na pasta /app/venv (onde temos permissão de escrita)
+    "python3 -m venv /app/venv",
+    # 2. Usa o pip DE DENTRO do ambiente virtual para instalar o yt-dlp
+    "/app/venv/bin/pip install --upgrade 'yt-dlp[default,curl_cffi]'"
 ]
 
 [start]
-cmd = "npm run start"
+# 3. O 'export PATH' é o pulo do gato: ele coloca o nosso venv na frente de tudo.
+# Assim, quando seu código chamar 'yt-dlp', ele vai pegar o que instalamos no venv.
+cmd = "export PATH=/app/venv/bin:$PATH && npm run start"
