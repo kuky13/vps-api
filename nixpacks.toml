@@ -1,14 +1,15 @@
 # Configuração Manual do Nixpacks para Kuky API
 
 [phases.setup]
-# MUDANÇA AQUI: Removemos 'python3-pip' da lista.
-# O 'python3' do Nix já deve ser suficiente para rodarmos o pip.
+# Mantemos os pacotes básicos (o Python vem sem o pip, e isso é normal no Nix)
 nixPkgs = ["nodejs_18", "python3", "ffmpeg"]
 
 [phases.install]
-# MUDANÇA AQUI: Usamos 'python3 -m pip' para garantir que ele ache o pip correto
 cmds = [
     "npm install",
+    # O COMANDO MÁGICO: Isso cria o pip dentro do Python
+    "python3 -m ensurepip --default-pip",
+    # Agora o pip existe e podemos usá-lo
     "python3 -m pip install --upgrade 'yt-dlp[default,curl_cffi]' --break-system-packages"
 ]
 
